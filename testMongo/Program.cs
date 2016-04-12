@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace testMongo
     {
         private static ParallelOptions options = new ParallelOptions()
         {
-            MaxDegreeOfParallelism = 8
+            MaxDegreeOfParallelism = 400
         };
         static void Main(string[] args)
         {
@@ -39,7 +40,7 @@ namespace testMongo
             Console.WriteLine("MaxDegreeOfParallelism   {0}", options.MaxDegreeOfParallelism);
             Console.WriteLine("Mongo Pool Size          {0}", client.Settings.MaxConnectionPoolSize);
 
-            foreach (var iterations in new[] { 100,1000, 10000})
+            foreach (var iterations in new[] { 100, 1000, 10000 })
             {
                 Console.WriteLine("---------------------------------------------------");
                 Console.WriteLine("Iterations               {0}", iterations);
@@ -73,7 +74,7 @@ namespace testMongo
             {
                 var commit = new JournalEntry()
                 {
-                    PersistenceId = (i%10).ToString(),
+                    PersistenceId = (i % 10).ToString(),
                     SequenceNr = i
                 };
 
@@ -114,36 +115,61 @@ namespace testMongo
             bool showException = true;
             var sw = new Stopwatch();
             sw.Start();
-            Parallel.ForEach(Enumerable.Range(1, documents), options, async i =>
+            long threadCount = 0;
+
+            var list = new ConcurrentBag<Task>();
+
+            Parallel.ForEach(Enumerable.Range(1, documents), options, i =>
             {
+                var count = Interlocked.Increment(ref threadCount);
                 var commit = new JournalEntry()
                 {
                     PersistenceId = (i % 10).ToString(),
                     SequenceNr = i
                 };
 
-                while(true)
+                while (true)
                 {
                     try
                     {
                         // http://haacked.com/archive/2014/11/11/async-void-methods/
-                        await collection.InsertOneAsync(commit);
+                        var task = collection.InsertOneAsync(commit);
+                        list.Add(task);
+                        Interlocked.Decrement(ref threadCount);
                         break;
                     }
                     catch (MongoWaitQueueFullException ex)
                     {
                         if (showException)
                         {
-                            Console.WriteLine("  queue full at document {0}, thread {1}", i, Thread.CurrentThread.ManagedThreadId);
+                            Console.WriteLine("  queue full at document {0}, thread {1}. Running {2} threads", i, Thread.CurrentThread.ManagedThreadId, count);
                             showException = false;
                         }
                         Thread.Sleep(100);
                     }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("  unhandled {0}", ex.Message);
+                    }
                 }
             });
+
+            Task.WhenAll(list);
             sw.Stop();
 
-            Console.WriteLine("- Elapsed {0}ms", sw.ElapsedMilliseconds);
+            Console.WriteLine("- Elapsed {0}ms - Thread count {1}", sw.ElapsedMilliseconds, threadCount);
+        }
+
+        private static void Test(int iterations)
+        {
+            long counter = 0;
+            Parallel.ForEach(Enumerable.Range(1, iterations), options, i =>
+            {
+                Interlocked.Increment(ref counter);
+                Interlocked.Decrement(ref counter);
+            });
+
+            Console.WriteLine("Counter {0}", counter);
         }
     }
 }
