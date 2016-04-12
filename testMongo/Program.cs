@@ -25,19 +25,38 @@ namespace testMongo
 
     class Program
     {
+        private static ParallelOptions options = new ParallelOptions()
+        {
+            MaxDegreeOfParallelism = 8
+        };
         static void Main(string[] args)
         {
-            var db = new MongoDB.Driver
-                .MongoClient("mongodb://localhost/?maxPoolSize=1000")
-                .GetDatabase("mongo-async-tests");
+            var client = new MongoClient("mongodb://localhost/");
 
-            db.DropCollection("journal-sync");
-            db.DropCollection("journal-async");
-            db.DropCollection("journal-async-await");
+            var db = client.GetDatabase("mongo-async-tests");
 
-            TestSync(db, 1000);
-            TestAsync(db, 1000);
-            TestAsyncAwait(db, 1000);
+            Console.WriteLine("ProcessorCount           {0}", Environment.ProcessorCount);
+            Console.WriteLine("MaxDegreeOfParallelism   {0}", options.MaxDegreeOfParallelism);
+            Console.WriteLine("Mongo Pool Size          {0}", client.Settings.MaxConnectionPoolSize);
+
+            foreach (var iterations in new[] { 100,1000, 10000})
+            {
+                Console.WriteLine("---------------------------------------------------");
+                Console.WriteLine("Iterations               {0}", iterations);
+                Console.WriteLine("---------------------------------------------------");
+
+                for (int c = 1; c <= 5; c++)
+                {
+                    Console.WriteLine("Run #{0}", c);
+                    db.DropCollection("journal-sync");
+                    db.DropCollection("journal-async");
+                    db.DropCollection("journal-async-await");
+
+                    TestSync(db, iterations);
+                    TestAsync(db, iterations);
+                    TestAsyncAwait(db, iterations);
+                }
+            }
 
             Console.WriteLine("Press any key to exit");
             Console.ReadLine();
@@ -46,11 +65,11 @@ namespace testMongo
         private static void TestSync(IMongoDatabase db, int documents)
         {
             var collection = db.GetCollection<JournalEntry>("journal-sync");
-            Console.Write("Inserting {0} documents, Sync version ", documents);
+            Console.Write("Sync version ");
 
             var sw = new Stopwatch();
             sw.Start();
-            Parallel.ForEach(Enumerable.Range(1, documents), i =>
+            Parallel.ForEach(Enumerable.Range(1, documents), options, i =>
             {
                 var commit = new JournalEntry()
                 {
@@ -68,11 +87,11 @@ namespace testMongo
         private static void TestAsync(IMongoDatabase db, int documents)
         {
             var collection = db.GetCollection<JournalEntry>("journal-async");
-            Console.Write("Inserting {0} documents, Async version ", documents);
+            Console.Write("Async version ");
 
             var sw = new Stopwatch();
             sw.Start();
-            Parallel.ForEach(Enumerable.Range(1, documents), i =>
+            Parallel.ForEach(Enumerable.Range(1, documents), options, i =>
             {
                 var commit = new JournalEntry()
                 {
@@ -90,11 +109,12 @@ namespace testMongo
         private static void TestAsyncAwait(IMongoDatabase db, int documents)
         {
             var collection = db.GetCollection<JournalEntry>("journal-async-await");
-            Console.Write("Inserting {0} documents, Async/Await version ", documents);
+            Console.WriteLine("Async/Await version");
 
+            bool showException = true;
             var sw = new Stopwatch();
             sw.Start();
-            Parallel.ForEach(Enumerable.Range(1, documents), async i =>
+            Parallel.ForEach(Enumerable.Range(1, documents), options, async i =>
             {
                 var commit = new JournalEntry()
                 {
@@ -112,8 +132,12 @@ namespace testMongo
                     }
                     catch (MongoWaitQueueFullException ex)
                     {
-                        Console.WriteLine("queue full at document {0}", i);
-                        Thread.Sleep(2000);
+                        if (showException)
+                        {
+                            Console.WriteLine("  queue full at document {0}, thread {1}", i, Thread.CurrentThread.ManagedThreadId);
+                            showException = false;
+                        }
+                        Thread.Sleep(100);
                     }
                 }
             });
