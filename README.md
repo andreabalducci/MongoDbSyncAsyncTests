@@ -9,117 +9,105 @@ Test results on my dev machine (Dell T 3500) - Debug
 	Iterations               100
 	---------------------------------------------------
 	Run #1
-	Sync version - Elapsed 106ms
-	Async version - Elapsed 672ms
-	Async/Await version
-	- Elapsed 34ms
+	Sync version - Elapsed 134ms
+	Async version - Elapsed 645ms
+	Async/Await version - Elapsed 36ms
 	Run #2
-	Sync version - Elapsed 77ms
-	Async version - Elapsed 1842ms
-	Async/Await version
-	- Elapsed 16ms
+	Sync version - Elapsed 129ms
+	Async version - Elapsed 82ms
+	Async/Await version - Elapsed 18ms
 	Run #3
-	Sync version - Elapsed 27ms
-	Async version - Elapsed 937ms
-	Async/Await version
-	- Elapsed 9ms
+	Sync version - Elapsed 37ms
+	Async version - Elapsed 533ms
+	Async/Await version - Elapsed 12ms
 	Run #4
-	Sync version - Elapsed 27ms
-	Async version - Elapsed 31ms
-	Async/Await version
-	- Elapsed 5ms
+	Sync version - Elapsed 41ms
+	Async version - Elapsed 51ms
+	Async/Await version - Elapsed 11ms
 	Run #5
-	Sync version - Elapsed 31ms
-	Async version - Elapsed 32ms
-	Async/Await version
-	- Elapsed 8ms
+	Sync version - Elapsed 40ms
+	Async version - Elapsed 73ms
+	Async/Await version - Elapsed 31ms
 	---------------------------------------------------
 	Iterations               1000
 	---------------------------------------------------
 	Run #1
-	Sync version - Elapsed 129ms
-	Async version - Elapsed 167ms
-	Async/Await version
-	  queue full at document 562, thread 5
-	  queue full at document 672, thread 15
-	  queue full at document 100, thread 1
-	- Elapsed 137ms
+	Sync version - Elapsed 163ms
+	Async version - Elapsed 1206ms
+	Async/Await version - Elapsed 160ms
 	Run #2
-	Sync version - Elapsed 130ms
-	Async version - Elapsed 161ms
-	Async/Await version
-	  queue full at document 631, thread 4
-	  queue full at document 639, thread 26
-	  queue full at document 604, thread 31
-	- Elapsed 206ms
+	Sync version - Elapsed 137ms
+	Async version - Elapsed 315ms
+	Async/Await version - Elapsed 117ms
 	Run #3
-	Sync version - Elapsed 132ms
-	Async version - Elapsed 163ms
-	Async/Await version
-	  queue full at document 655, thread 26
-	  queue full at document 630, thread 31
-	  queue full at document 595, thread 18
-	- Elapsed 177ms
-	Run #4
 	Sync version - Elapsed 138ms
-	Async version - Elapsed 252ms
-	Async/Await version
-	  queue full at document 623, thread 34
-	  queue full at document 651, thread 36
-	  queue full at document 254, thread 23
-	- Elapsed 214ms
+	Async version - Elapsed 1706ms
+	Async/Await version - Elapsed 233ms
+	Run #4
+	Sync version - Elapsed 162ms
+	Async version - Elapsed 293ms
+	Async/Await version - Elapsed 212ms
 	Run #5
-	Sync version - Elapsed 152ms
-	Async version - Elapsed 190ms
-	Async/Await version
-	  queue full at document 568, thread 1
-	  queue full at document 632, thread 12
-	  queue full at document 646, thread 20
-	  queue full at document 611, thread 31
-	- Elapsed 193ms
+	Sync version - Elapsed 172ms
+	Async version - Elapsed 327ms
+	Async/Await version - Elapsed 127ms
 	---------------------------------------------------
 	Iterations               10000
 	---------------------------------------------------
 	Run #1
-	Sync version - Elapsed 1118ms
-	Async version - Elapsed 1564ms
-	Async/Await version
-	  queue full at document 686, thread 1
-	  queue full at document 271, thread 37
-	  queue full at document 678, thread 17
-	- Elapsed 2592ms
+	Sync version - Elapsed 1330ms
+	Async version - Elapsed 2855ms
+	Async/Await version - Elapsed 1922ms
 	Run #2
-	Sync version - Elapsed 1083ms
-	Async version - Elapsed 1595ms
-	Async/Await version
-	  queue full at document 600, thread 25
-	  queue full at document 639, thread 18
-	- Elapsed 2374ms
+	Sync version - Elapsed 1287ms
+	Async version - Elapsed 2862ms
+	Async/Await version - Elapsed 2086ms
 	Run #3
-	Sync version - Elapsed 1153ms
-	Async version - Elapsed 1925ms
-	Async/Await version
-	  queue full at document 643, thread 34
-	  queue full at document 706, thread 27
-	  queue full at document 681, thread 1
-	- Elapsed 2485ms
+	Sync version - Elapsed 1300ms
+	Async version - Elapsed 2886ms
+	Async/Await version - Elapsed 2199ms
 	Run #4
-	Sync version - Elapsed 1116ms
-	Async version - Elapsed 1543ms
-	Async/Await version
-	  queue full at document 584, thread 33
-	  queue full at document 654, thread 22
-	  queue full at document 614, thread 1
-	  queue full at document 629, thread 17
-	- Elapsed 3112ms
+	Sync version - Elapsed 1245ms
+	Async version - Elapsed 2848ms
+	Async/Await version - Elapsed 2131ms
 	Run #5
-	Sync version - Elapsed 1064ms
-	Async version - Elapsed 1592ms
-	Async/Await version
-	  queue full at document 620, thread 1
-	  queue full at document 673, thread 22
-	  queue full at document 646, thread 24
-	- Elapsed 2328ms
+	Sync version - Elapsed 1269ms
+	Async version - Elapsed 3081ms
+	Async/Await version - Elapsed 2130ms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -28,7 +28,7 @@ namespace testMongo
     {
         private static ParallelOptions options = new ParallelOptions()
         {
-            MaxDegreeOfParallelism = 400
+            MaxDegreeOfParallelism = 8
         };
         static void Main(string[] args)
         {
@@ -110,7 +110,7 @@ namespace testMongo
         private static void TestAsyncAwait(IMongoDatabase db, int documents)
         {
             var collection = db.GetCollection<JournalEntry>("journal-async-await");
-            Console.WriteLine("Async/Await version");
+            Console.Write("Async/Await version ");
 
             bool showException = true;
             var sw = new Stopwatch();
@@ -157,7 +157,7 @@ namespace testMongo
             Task.WhenAll(list);
             sw.Stop();
 
-            Console.WriteLine("- Elapsed {0}ms - Thread count {1}", sw.ElapsedMilliseconds, threadCount);
+            Console.WriteLine("- Elapsed {0}ms", sw.ElapsedMilliseconds);
         }
 
         private static void Test(int iterations)
